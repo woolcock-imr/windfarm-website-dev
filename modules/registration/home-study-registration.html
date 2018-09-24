@@ -1,0 +1,154 @@
+<br>
+<div class="container" style='border:1px solid #888;max-width:700px;background-color:#fff;padding-left:0;padding-right:0'>
+	<div id=header__ID>
+		<h2>Registration</h2>
+	</div>
+	<div class="container" style='padding-top:20px'>
+	    <form id=F__ID>
+			<div class="row row__ID">
+				<div class="col">
+	                <input type="text" class="form-control" name="First_Name" placeholder="First Name*" required>
+	            </div>
+			</div>
+			<div class="row row__ID">
+	            <div class="col">
+	                <input type="text" class="form-control" name="Last_Name" placeholder="Last Name*" required>
+	            </div>
+			</div>
+			<div class="row row__ID">
+	            <div class="col">
+	                <input type="text" class="form-control" name="Phone_Number" placeholder="Phone*" required>
+	            </div>
+			</div>
+			<div class="row row__ID">
+	            <div class="col">
+	                <input type="email" class="form-control" id=Email__ID name="Email" placeholder="Email*" required>
+	            </div>
+			</div>
+			<div class="row row__ID">
+	            <div class="col">
+	                <input type="text" class="form-control" name="Postcode" placeholder="Postcode*" required>
+	            </div>
+			</div>
+			<div class="row row__ID">
+	            <div class="col">
+	                <input type="text" class="form-control" name="Suburb" placeholder="Suburb*" required>
+	            </div>
+			</div>
+			<div class="row row__ID">
+	            <div class="col">
+	                <label class=label__ID>How did you find out about this study?</label><br>
+	                <select class="form-control" Name=Study_find required>
+		                <option value=''> Please Select One</option>
+		                <option value='1' >Woolcock Institute website</option>
+						<option value='3' >Advertising flier</option>
+		                <option value='2' >Sleep Physician referral</option>
+		                <option value='4' >Internet search</option>
+		                <option value='5' >Facebook</option>
+		                <option value='6' >LinkedIn</option>
+		                <option value='7' >Twitter</option>
+		                <option value='8' >University website</option>
+		                <option value='9' >Radio</option>
+		                <option value='10' >TV</option>
+		                <option value='11' >Newspaper article</option>
+		                <option value='12' >Word of mouth</option>
+		                <option value='13' >Not specified</option>
+		                <option value='14' >Sleep Health Foundation website</option>
+		                <option value='15' >Received an email</option>
+		                <option value='16' >GP</option>
+		                <option value='17' >Pharmacy</option>
+		                <option value='18' >Other</option>
+	                </select>
+	            </div>
+			</div>
+			<div class="row row__ID">
+	            <div class="col">
+	                <input type="text" class="form-control" name="Study_find_other" placeholder="Other">
+	            </div>
+			</div>
+			<div class="row row__ID text-center">
+	            <div class='col'>
+	            	<input class="btn btn-secondary" type=submit id=submit__ID value="Submit" />
+	            </div>
+			</div>
+	            <div style='text-align:center;font-size:9pt;color:#000'>
+					<br><br>
+	                The Woolcock Institute of Medical Research recognises the importance of your personal information and privacy. <br>
+	                We will use your provided details only to contact you about information we believe will be of interest to you. <br><br>
+	                <a href="http://woolcock.org.au/s/Privacy-Policy-Jan-2016-Final.pdf" target="_blank" >Click here to read our full Privacy Policy.</a>
+					<br><br>
+	            </div>
+	        </div>
+	    </form>
+	</div>
+</div>
+<script>
+    function F__ID(){
+        //-------------------------------------
+        $('#D__ID').on('load',function(){
+            $('#F__ID')[0].reset();
+        })
+        //-------------------------------------
+		$('#F__ID').submit(function(event){
+			//--------------------------------------------------------
+			event.preventDefault();
+			$('#submit__ID').hide();
+			//--------------------------------------------------------
+			var data={}; var a=$("#F__ID").serializeArray(); $.each(a, function () { data[this.name]=this.value || '';});
+			var dbv={}
+			dbv.S1=$('#Email__ID').val();
+            dbv.S2=$('#Email__ID').val();
+			//--------------------------------------------------------
+			var req={cmd:"s1_s2_exist",db_pid:'91000087',s1:dbv.S1,s2:dbv.S2};							//regidtration: 91000087
+            $VmAPI.request({data:req,callback:function(res){
+                if(res.ret==='0'){
+                    var req={cmd:"add_record_anonymous",db_pid:'91000087',data:data,dbv:dbv};
+                    $VmAPI.request({data:req,callback:function(res){
+						send_alert_email();
+						$vm.alert('Thank you for your registration. You will be contacted by one our team members shortly');
+                    }});
+                }
+                else{
+                    $vm.alert('The email already exists, so you have already registered.')
+                }
+            }});
+			//--------------------------------------------------------
+		})
+		//--------------------------------------------------------
+		var send_alert_email=function(){
+            var From_Address="noresponse@woolcock.org.au";
+            var From_Name="Woolcock Institute of Medical Research";
+            var To="windfarmhomestudy@woolcock.org.au";
+            var Title="Wind farm home study registration";
+            var Body="A new registration has beee added into the database."
+    		Body+="&nbsp;<br>"
+    		Body+="&nbsp;<br>";
+			if($VmAPI.api_base=='https://cbs.wappsystem.com/dev/') From_Address="noresponse@wappsystem.com";
+			if($VmAPI.api_base=='https://cbs.wappsystem.com/dev/') To="zzm.vmiis@gmail.com";
+    		$VmAPI.request({data:{cmd:'send_email',From_Address:From_Address,From_Name:From_Name,To:To,Title:Title,Body:Body},callback:function(res){
+            }})
+        }
+		//--------------------------------------------------------
+    }
+</script>
+<style>
+	#D__ID{
+		height:100%;
+		overflow:auto;
+		animation: vm_module_fadein 1.0s;
+	}
+	@media screen and (max-width:768px){
+		#D__ID{
+			padding-bottom:30px;
+		}
+	}
+	#header__ID{
+		background-color:#727b84;
+		color:#fff;
+		padding:10px 15px 10px 15px;
+		font-size:120%;
+	}
+	.row__ID{
+		padding:6px 0;
+	}
+</style>
